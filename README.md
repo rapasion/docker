@@ -19,3 +19,6 @@ docker logs apache_server
 
 ## using git bash
 winpty docker exec -it apache_server ls -l /usr/local/apache2/logs
+
+## tail logs
+winpty docker exec -it apache_server tail -f //usr/local/apache2/logs/access_log
