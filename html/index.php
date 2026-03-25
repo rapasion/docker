@@ -33,15 +33,15 @@
 <?php include 'header.php'; ?>
 
 <main>
-    <h1>Welcome to Richard Pasion’s Website</h1>
+    <h1>Welcome to Richard Pasion Website</h1>
     <p>
         This is the personal homepage of <strong>Richard Pasion</strong> — a space for projects, ideas,
-        and anything you want to showcase. You can expand this into a portfolio, a blog, or a full
+        and anything he want's to showcase. It can expand this into a portfolio, a blog, or a full
         application as your stack grows.
     </p>
 
     <p>
-        Your Apache + PHP-FPM environment is now running smoothly.  
+        Apache + PHP-FPM environment is now running smoothly.  
         Feel free to modify this page and build out your site structure.
     </p>
 </main>
