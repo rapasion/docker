@@ -10,9 +10,16 @@ services:
       - ./logs:/usr/local/apache2/logs/
     depends_on:
       - php
+    networks:
+      - appnet
 
   php:
     image: php:8.2-fpm
     container_name: php_fpm
     volumes:
       - ./html:/var/www/html
+    networks:
+      - appnet
+
+networks:
+  appnet:
