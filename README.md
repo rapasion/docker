@@ -13,3 +13,6 @@ Depends on PHP-FPM
 Shares the same ./html directory
 
 No custom config yet
+
+## to check logs
+docker logs apache_server
