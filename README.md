@@ -43,3 +43,31 @@ sudo systemctl enable docker
 bash
 sudo usermod -aG docker $(whoami)
 
+########################################################################################
+SSL
+1. Create a folder for SSL certs
+On your host:
+
+Code
+mkdir ssl
+🧩 2. Generate a self‑signed certificate
+Run this in PowerShell (not Git Bash):
+
+powershell
+openssl req -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout ssl/server.key \
+  -out ssl/server.crt \
+  -subj "/CN=localhost"
+This creates:
+
+Code
+ssl/server.key
+ssl/server.crt
+🧩 3. Update your docker-compose.yml
+4. Update your Apache config (httpd.conf)
+5. Restart your stack
+docker compose down
+docker compose up -d
+https://localhost
+
