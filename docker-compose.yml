@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./html:/usr/local/apache2/htdocs/
+      - ./html:/var/www/html
       - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./logs:/usr/local/apache2/logs/
     depends_on:
