@@ -22,6 +22,11 @@ services:
       - ./html:/var/www/html
     networks:
       - appnet
+    healthcheck:
+      test: ["CMD", "php", "-v"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   postgres:
     image: postgres:16
@@ -32,6 +37,16 @@ services:
       POSTGRES_DB: postgresdb
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - appnet
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
     networks:
       - appnet
 

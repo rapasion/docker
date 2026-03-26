@@ -81,3 +81,22 @@ docker compose down
 docker compose build php
 docker compose up -d
 
+##validate compose file
+docker compose config
+
+## inspect 
+docker inspect php_fpm --format='{{json .State.Health}}'
+### module
+docker exec -it php_fpm php -m
+
+## docker exec
+docker exec php_fpm php -m | grep pg
+
+## adminer
+
+Field	Value
+System	PostgreSQL
+Server	postgres
+Username	richardp
+Password	Password1!
+Database	postgresdb
