@@ -14,8 +14,8 @@ EXPOSE 80
 # Apache is started by default via the base image's CMD
 
 #postgresdb
-FROM php:8.2-fpm
+#FROM php:8.2-fpm
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+#RUN apt-get update && apt-get install -y \
+#    libpq-dev \
+#    && docker-php-ext-install pdo pdo_pgsql pgsql
