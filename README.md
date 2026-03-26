@@ -88,3 +88,6 @@ docker compose config
 docker inspect php_fpm --format='{{json .State.Health}}'
 ### module
 docker exec -it php_fpm php -m
+
+## docker exec
+docker exec php_fpm php -m | grep pg
