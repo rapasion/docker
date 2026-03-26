@@ -118,3 +118,13 @@ Port	5432
 Username	richardp
 Password	Password1!
 Maintenance DB	postgresdb
+
+## create table
+CREATE TABLE contacts (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
