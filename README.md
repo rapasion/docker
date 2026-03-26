@@ -81,3 +81,5 @@ docker compose down
 docker compose build php
 docker compose up -d
 
+##validate compose file
+docker compose config
