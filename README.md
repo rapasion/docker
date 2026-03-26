@@ -100,3 +100,21 @@ Server	postgres
 Username	richardp
 Password	Password1!
 Database	postgresdb
+
+## PGAdmin
+Inside pgAdmin:
+
+Servers → Register → Server
+
+Fill in:
+
+General
+Name: Postgres (Docker)
+
+Connection
+Field	Value
+Hostname	postgres
+Port	5432
+Username	richardp
+Password	Password1!
+Maintenance DB	postgresdb
