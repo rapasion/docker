@@ -83,3 +83,8 @@ docker compose up -d
 
 ##validate compose file
 docker compose config
+
+## inspect 
+docker inspect php_fpm --format='{{json .State.Health}}'
+### module
+docker exec -it php_fpm php -m
