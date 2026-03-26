@@ -91,3 +91,12 @@ docker exec -it php_fpm php -m
 
 ## docker exec
 docker exec php_fpm php -m | grep pg
+
+## adminer
+
+Field	Value
+System	PostgreSQL
+Server	postgres
+Username	richardp
+Password	Password1!
+Database	postgresdb
