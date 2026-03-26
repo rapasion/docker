@@ -40,6 +40,16 @@ services:
     networks:
       - appnet
 
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+    networks:
+      - appnet
+
 networks:
   appnet:
   
