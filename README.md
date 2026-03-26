@@ -71,3 +71,13 @@ docker compose down
 docker compose up -d
 https://localhost
 
+
+### rebuild
+4. Rebuild everything (critical)
+You MUST rebuild the PHP image:
+
+Code
+docker compose down
+docker compose build php
+docker compose up -d
+
