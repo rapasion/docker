@@ -22,7 +22,7 @@ services:
       - ./html:/var/www/html
     networks:
       - appnet
-	  
+
   postgres:
     image: postgres:16
     container_name: postgres
