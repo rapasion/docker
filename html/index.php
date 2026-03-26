@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Richard Pasion | Home</title>
-
     <style>
         body {
             margin: 0;
@@ -30,6 +29,13 @@
             padding: 20px;
             color: #777;
         }
+        .db-box {
+            background: #eef7ff;
+            padding: 15px;
+            border-left: 4px solid #0077cc;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -47,9 +53,35 @@
     </p>
 
     <p>
-        Your Apache + PHP-FPM environment is now running smoothly.  
-        Feel free to modify this page and build out your site structure.
+        Your Apache + PHP-FPM + PostgreSQL environment is now running smoothly.
     </p>
+
+    <h2>Database Connectivity Test</h2>
+
+    <div class="db-box">
+        <?php
+        $dsn = "pgsql:host=postgres;port=5432;dbname=postgresdb;";
+        $user = "richardp";
+        $pass = "Password1!";
+
+        try {
+            $db = new PDO($dsn, $user, $pass, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]);
+
+            $stmt = $db->query("SELECT NOW() AS server_time");
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            echo "<strong>Connected to PostgreSQL!</strong><br>";
+            echo "Server time: " . $row['server_time'];
+
+        } catch (PDOException $e) {
+            echo "<strong style='color:red;'>Database connection failed:</strong><br>";
+            echo $e->getMessage();
+        }
+        ?>
+    </div>
+
 </main>
 
 <footer>
