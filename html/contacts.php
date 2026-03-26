@@ -11,9 +11,16 @@ $contacts = db()->query("SELECT * FROM contacts ORDER BY id DESC")->fetchAll(PDO
 
 <h1>Contacts</h1>
 <a href="add_contact.php">Add New Contact</a>
+<br><br>
+
 <table border="1" cellpadding="8" cellspacing="0">
     <tr>
-        <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Created</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Created</th>
+        <th>Actions</th> <!-- You forgot this -->
     </tr>
 
     <?php foreach ($contacts as $c): ?>
@@ -25,7 +32,7 @@ $contacts = db()->query("SELECT * FROM contacts ORDER BY id DESC")->fetchAll(PDO
         <td><?= $c['created_at'] ?></td>
         <td>
             <a href="edit_contact.php?id=<?= $c['id'] ?>">Edit</a> |
-            <a href="delete_contact.php?id=<?= $c['id'] ?>" 
+            <a href="delete_contact.php?id=<?= $c['id'] ?>"
                onclick="return confirm('Are you sure you want to delete this contact?')">
                Delete
             </a>
