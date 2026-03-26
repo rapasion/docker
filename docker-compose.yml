@@ -16,7 +16,7 @@ services:
       - appnet
 
   php:
-    image: php:8.2-fpm
+    build: ./php
     container_name: php_fpm
     volumes:
       - ./html:/var/www/html
@@ -40,4 +40,3 @@ networks:
   
 volumes:
   pgdata:
-  appnet:
