@@ -17,13 +17,20 @@ $contacts = db()->query("SELECT * FROM contacts ORDER BY id DESC")->fetchAll(PDO
     </tr>
 
     <?php foreach ($contacts as $c): ?>
-        <tr>
-            <td><?= $c['id'] ?></td>
-            <td><?= $c['first_name'] . " " . $c['last_name'] ?></td>
-            <td><?= $c['email'] ?></td>
-            <td><?= $c['phone'] ?></td>
-            <td><?= $c['created_at'] ?></td>
-        </tr>
+    <tr>
+        <td><?= $c['id'] ?></td>
+        <td><?= $c['first_name'] . " " . $c['last_name'] ?></td>
+        <td><?= $c['email'] ?></td>
+        <td><?= $c['phone'] ?></td>
+        <td><?= $c['created_at'] ?></td>
+        <td>
+            <a href="edit_contact.php?id=<?= $c['id'] ?>">Edit</a> |
+            <a href="delete_contact.php?id=<?= $c['id'] ?>" 
+               onclick="return confirm('Are you sure you want to delete this contact?')">
+               Delete
+            </a>
+        </td>
+    </tr>
     <?php endforeach; ?>
 </table>
 
