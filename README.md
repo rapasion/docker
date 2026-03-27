@@ -128,3 +128,7 @@ CREATE TABLE contacts (
     phone VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+## error reporting 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
