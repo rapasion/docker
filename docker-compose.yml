@@ -5,12 +5,12 @@ services:
     ports:
       - "80:80"
       - "443:443"
-  depends_on:
-    - php
-  networks:
-    - appnet
-  volumes:
-    - ./html:/var/www/html:ro
+    depends_on:
+      - php
+    networks:
+      appnet:
+    volumes:
+      - ./html:/var/www/html:ro
 
   php:
     build: ./php
@@ -18,7 +18,7 @@ services:
     volumes:
       - ./html:/var/www/html
     networks:
-      - appnet
+      appnet:
     healthcheck:
       test: ["CMD", "php", "-v"]
       interval: 30s
@@ -35,7 +35,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - appnet
+      appnet:
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -48,10 +48,10 @@ services:
     depends_on:
       - postgres
     networks:
-      - appnet
+      appnet:
 
 networks:
   appnet:
-  
+
 volumes:
   pgdata:
