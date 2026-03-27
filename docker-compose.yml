@@ -10,7 +10,7 @@ services:
     networks:
       appnet:
     volumes:
-      - ./html:/var/www/html:ro
+      - ./html:/var/www/html
 
   php:
     build: ./php
