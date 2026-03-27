@@ -18,5 +18,5 @@ RUN echo "Include conf/extra/vhost.conf" >> /usr/local/apache2/conf/httpd.conf
 
 # Create directory for SSL certs
 RUN mkdir -p /usr/local/apache2/conf/ssl
-COPY ssl/server.crt /usr/local/apache2/conf/ssl/server.crt
-COPY ssl/server.key /usr/local/apache2/conf/ssl/server.key
+COPY ssl/server.crt /usr/local/apache2/conf/ssl/
+COPY ssl/server.key /usr/local/apache2/conf/ssl/
