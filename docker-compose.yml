@@ -1,19 +1,16 @@
 services:
   apache:
-    image: httpd:latest
-    container_name: apache_server
+    build: ./apache
+    container_name: apache
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./html:/var/www/html
-      - ./conf/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./logs:/usr/local/apache2/logs/
-      - ./ssl:/usr/local/apache2/conf/ssl
-    depends_on:
-      - php
-    networks:
-      - appnet
+  depends_on:
+    - php
+  networks:
+    - appnet
+  volumes:
+    - ./html:/var/www/html:ro
 
   php:
     build: ./php
