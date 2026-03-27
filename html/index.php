@@ -36,6 +36,21 @@
             margin-top: 20px;
             border-radius: 4px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        table th {
+            background: #f0f0f0;
+        }
+        .actions a {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -60,6 +75,8 @@
 
     <div class="db-box">
         <?php
+        require 'db.php';
+
         $dsn = "pgsql:host=postgres;port=5432;dbname=postgresdb;";
         $user = "richardp";
         $pass = "Password1!";
@@ -81,6 +98,42 @@
         }
         ?>
     </div>
+
+    <h2 style="margin-top:40px;">Contacts</h2>
+    <a href="add_contact.php">Add New Contact</a>
+
+    <?php
+    // Fetch contacts
+    $contacts = db()->query("SELECT * FROM contacts ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+
+        <?php foreach ($contacts as $c): ?>
+        <tr>
+            <td><?= $c['id'] ?></td>
+            <td><?= $c['first_name'] . " " . $c['last_name'] ?></td>
+            <td><?= $c['email'] ?></td>
+            <td><?= $c['phone'] ?></td>
+            <td><?= $c['created_at'] ?></td>
+            <td class="actions">
+                <a href="edit_contact.php?id=<?= $c['id'] ?>">Edit</a>
+                <a href="delete_contact.php?id=<?= $c['id'] ?>"
+                   onclick="return confirm('Are you sure you want to delete this contact?')">
+                   Delete
+                </a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
 
 </main>
 

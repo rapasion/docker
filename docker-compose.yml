@@ -40,11 +40,14 @@ services:
     networks:
       - appnet
 
-  adminer:
-    image: adminer:latest
-    container_name: adminer
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@localhost.com
+      PGADMIN_DEFAULT_PASSWORD: Password1!
     ports:
-      - "8081:8080"
+      - "8082:80"
     depends_on:
       - postgres
     networks:

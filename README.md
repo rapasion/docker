@@ -100,3 +100,35 @@ Server	postgres
 Username	richardp
 Password	Password1!
 Database	postgresdb
+
+## PGAdmin
+Inside pgAdmin:
+
+Servers → Register → Server
+
+Fill in:
+
+General
+Name: Postgres (Docker)
+
+Connection
+Field	Value
+Hostname	postgres
+Port	5432
+Username	richardp
+Password	Password1!
+Maintenance DB	postgresdb
+
+## create table
+CREATE TABLE contacts (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+## error reporting 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
