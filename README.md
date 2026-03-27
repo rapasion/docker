@@ -92,3 +92,7 @@ apache:
   volumes:
     - ./html:/var/www/html:ro
 PHP service stays as your existing php_fpm on the same appnet network.
+
+## rebuild
+docker compose build apache
+docker compose up -d
