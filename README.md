@@ -1,134 +1,94 @@
-# docker
+## Docker
+production‑ready Apache image
 
-1. Apache (httpd)
-Serves content from ./html
+1. Apache Dockerfile (apache/Dockerfile)
+Dockerfile
+FROM httpd:2.4
 
-Uses a custom httpd.conf
+# Enable required modules
+RUN sed -i \
+    -e 's/#LoadModule ssl_module/LoadModule ssl_module/' \
+    -e 's/#LoadModule socache_shmcb_module/LoadModule socache_shmcb_module/' \
+    -e 's/#LoadModule proxy_module/LoadModule proxy_module/' \
+    -e 's/#LoadModule proxy_fcgi_module/LoadModule proxy_fcgi_module/' \
+    -e 's/#LoadModule headers_module/LoadModule headers_module/' \
+    -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/' \
+    conf/httpd.conf
 
-Logs mapped to ./logs
+# Copy vhost config
+COPY vhost.conf /usr/local/apache2/conf/extra/vhost.conf
 
-Depends on PHP-FPM
+# Include vhost in main config
+RUN echo "Include conf/extra/vhost.conf" >> /usr/local/apache2/conf/httpd.conf
 
-2. PHP-FPM (php:8.2-fpm)
-Shares the same ./html directory
+# Create directory for SSL certs
+RUN mkdir -p /usr/local/apache2/conf/ssl
+COPY ssl/server.crt /usr/local/apache2/conf/ssl/server.crt
+COPY ssl/server.key /usr/local/apache2/conf/ssl/server.key
+2. Virtual host with SSL + security headers (apache/vhost.conf)
+apache
+# Redirect HTTP → HTTPS
+<VirtualHost *:80>
+    ServerName localhost
 
-No custom config yet
+    RewriteEngine On
+    RewriteRule ^/(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+</VirtualHost>
 
-## to check logs
-docker logs apache_server
+# HTTPS vhost
+<VirtualHost *:443>
+    ServerName localhost
 
-## using git bash
-winpty docker exec -it apache_server ls -l /usr/local/apache2/logs
+    SSLEngine on
+    SSLCertificateFile "/usr/local/apache2/conf/ssl/server.crt"
+    SSLCertificateKeyFile "/usr/local/apache2/conf/ssl/server.key"
 
-## tail logs
-winpty docker exec -it apache_server tail -f //usr/local/apache2/logs/access_log
+    # Security headers
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'"
 
-###################################################################################
-Step 1: Install Docker Engine 
-If Docker is not already installed, follow these steps using the official Docker Docs instructions:
-Install required packages for yum-utils:
+    # HSTS (enable once you're sure HTTPS is stable)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Proxy to PHP-FPM container
+    ProxyPreserveHost On
+    ProxyPassMatch "^/(.*\.php(/.*)?)$" "fcgi://php_fpm:9000/var/www/html/$1"
+
+    DocumentRoot "/var/www/html"
+
+    <Directory "/var/www/html">
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog  "/usr/local/apache2/logs/error.log"
+    CustomLog "/usr/local/apache2/logs/access.log" combined
+</VirtualHost>
+3. Self‑signed SSL cert (dev/initial prod)
+Generate once on your host (inside apache/ssl):
+
 bash
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-Add the official Docker repository:
-bash
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-Install Docker Engine and CLI:
-bash
-sudo yum install docker-ce docker-ce-cli containerd.io
-Start and enable the Docker service:
-bash
-sudo systemctl start docker
-sudo systemctl enable docker
-(Optional) Add your user to the docker group to run commands without sudo (log out and log back in for this to take effect):
-bash
-sudo usermod -aG docker $(whoami)
-
-########################################################################################
-SSL
-1. Create a folder for SSL certs
-On your host:
-
-Code
-mkdir ssl
-🧩 2. Generate a self‑signed certificate
-Run this in PowerShell (not Git Bash):
-
-powershell
+mkdir -p apache/ssl
 openssl req -x509 -nodes -days 365 \
   -newkey rsa:2048 \
-  -keyout ssl/server.key \
-  -out ssl/server.crt \
-  -subj "/CN=localhost"
-This creates:
-
-Code
-ssl/server.key
-ssl/server.crt
-🧩 3. Update your docker-compose.yml
-4. Update your Apache config (httpd.conf)
-5. Restart your stack
-docker compose down
-docker compose up -d
-https://localhost
-
-
-### rebuild
-4. Rebuild everything (critical)
-You MUST rebuild the PHP image:
-
-Code
-docker compose down
-docker compose build php
-docker compose up -d
-
-##validate compose file
-docker compose config
-
-## inspect 
-docker inspect php_fpm --format='{{json .State.Health}}'
-### module
-docker exec -it php_fpm php -m
-
-## docker exec
-docker exec php_fpm php -m | grep pg
-
-## adminer
-
-Field	Value
-System	PostgreSQL
-Server	postgres
-Username	richardp
-Password	Password1!
-Database	postgresdb
-
-## PGAdmin
-Inside pgAdmin:
-
-Servers → Register → Server
-
-Fill in:
-
-General
-Name: Postgres (Docker)
-
-Connection
-Field	Value
-Hostname	postgres
-Port	5432
-Username	richardp
-Password	Password1!
-Maintenance DB	postgresdb
-
-## create table
-CREATE TABLE contacts (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(100),
-    last_name VARCHAR(100),
-    email VARCHAR(150) UNIQUE,
-    phone VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-## error reporting 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+  -keyout apache/ssl/server.key \
+  -out apache/ssl/server.crt \
+  -subj "/C=PH/ST=Rizal/L=Binangonan/O=RichardP/OU=Dev/CN=localhost"
+4. Docker Compose service snippet
+yaml
+apache:
+  build: ./apache
+  container_name: apache
+  ports:
+    - "80:80"
+    - "443:443"
+  depends_on:
+    - php
+  networks:
+    - appnet
+  volumes:
+    - ./html:/var/www/html:ro
+PHP service stays as your existing php_fpm on the same appnet network.
